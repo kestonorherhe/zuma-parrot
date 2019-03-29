@@ -15,6 +15,7 @@ const localStrategy = new LocalStrategy(
   async (userName, password, done) => {
     try {
       const admin = await Admin.findOne({ userName });
+      // console.log(admin)
       if (!admin) {
         return done(null, false);
       } else if (!admin.authenticateAdmin(password)) {
