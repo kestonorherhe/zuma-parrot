@@ -12,7 +12,6 @@ export async function signUp(req, res) {
 } 
 
 export function login(req, res, next) {
-  console.log(req)
   res.status(HTTPStatus.OK).json(req.user.toAuthJSON());
 
   return next();

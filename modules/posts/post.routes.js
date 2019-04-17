@@ -4,7 +4,7 @@ import multer from 'multer'
 import GridFsStorage from 'multer-gridfs-storage'
 
 import * as postController from './post.controllers';
-import { authJwt } from '../../services/auth.services';  
+import { authJwt } from '../../services/auth.services';
 import postValidation from './post.validations';
 
 // use this for grid-fs storage
@@ -27,14 +27,14 @@ const upload = multer({ storage: storage })
 const routes = new Router();
 
 // this is a protected route
-routes.post( 
+routes.post(
   '/',
   authJwt,
   validate(postValidation.createPost),
   postController.createPost,
 );
 
-routes.put( 
+routes.put(
   '/appendpath/:id',
   upload.array('images', 3),
   postController.appendImagePath
@@ -51,6 +51,11 @@ routes.get(
 // routes.get('/:id', authJwt, postController.getPostById);
 
 routes.get('/', postController.getPostsList);
+
+routes.get(
+  '/category/tag',
+  postController.getPostsByCategory
+);
 
 // this is a protected route
 // routes.get('/', authJwt, postController.getPostsList);

@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import slug from 'slug';
-import uniqueValidator from 'mongoose-unique-validator'; 
+import uniqueValidator from 'mongoose-unique-validator';
 
 const PostSchema = new Schema(
   {
@@ -15,7 +15,7 @@ const PostSchema = new Schema(
       unique: true,
     },
     category: {
-      type: [String],
+      type: String,
       trim: true,
       required: true
     },
@@ -38,6 +38,16 @@ const PostSchema = new Schema(
       type: Number,
       default: 0,
     },
+    commentIds: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Comment'
+      }
+    ],
+    isComment: {
+      type: Boolean,
+      default: false,
+    }
   },
   { timestamps: true },
 );
@@ -46,7 +56,7 @@ PostSchema.plugin(uniqueValidator, {
   message: '{VALUE} already taken!',
 });
 
-PostSchema.pre('validate', function(next) {
+PostSchema.pre('validate', function (next) {
   this._slugify();
 
   next();
@@ -67,6 +77,9 @@ PostSchema.methods = {
       slug: this.slug,
       admin: this.user,
       favoriteCount: this.favoriteCount,
+      updatedAt: this.updatedAt,
+      isComment: this.isComment,
+      comments: this.commentIds
     };
   },
 };
@@ -84,6 +97,10 @@ PostSchema.statics = {
       .skip(skip)
       .limit(limit)
       .populate('admin');
+  },
+
+  findByIdAndPopulate(postId) {
+    return this.findById(postId).populate('commentIds')
   },
 
   incFavoriteCount(postId) {

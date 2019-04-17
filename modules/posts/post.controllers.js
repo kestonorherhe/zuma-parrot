@@ -3,7 +3,6 @@ import HTTPStatus from 'http-status';
 const grid = require("gridfs-stream");
 
 import Post from './post.model';
-import Admin from '../admins/admin.model'; 
 
 //  this is a protected route
 export async function createPost(req, res) {
@@ -29,11 +28,39 @@ export async function appendImagePath(req, res) {
 export async function getPostById(req, res) {
   try {
     const promise = await Post.findById(req.params.id)
-    const post = await promise
+    // .populate('commentIds')
+    .populate({
+      path: 'commentIds',
+      populate: ({ 
+        path: 'replylv1',
+        populate: ({ 
+          path: 'replylv2',
+          populate: ({ 
+            path: 'replylv3',
+          })
+        })
+      })
+    })
+    .
+    exec(function (err, post) {
+      if (err) return console.log(err)
 
-    return res.status(HTTPStatus.OK).json(post)
+      return res.status(HTTPStatus.OK).json(post)
+    })
   } catch (error) {
     return res.status(HTTPStatus.BAD_REQUEST).json(error);
+  }
+}
+
+export async function getPostsByCategory(req, res) {
+  console.log(req.query);
+  let query = req.query
+  try {
+      const posts = await Post.find(query)
+
+      return res.status(HTTPStatus.OK).json(posts)
+  } catch (error) {
+      return res.status(HTTPStatus.BAD_REQUEST).json(error)
   }
 }
 

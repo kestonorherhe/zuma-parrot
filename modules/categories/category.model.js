@@ -33,7 +33,6 @@ CategorySchema.methods = {
         this.slug = slug(this.category);
     },
     toJSON() {
-        console.log(this);
         return {
             _id: this._id,
             category: this.category,
@@ -45,7 +44,6 @@ CategorySchema.methods = {
 
 CategorySchema.statics = {
     createCategory(args, admin) {
-        console.log(args, admin);
         return this.create({
             ...args,
             admin,

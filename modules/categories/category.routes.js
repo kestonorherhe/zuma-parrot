@@ -17,15 +17,20 @@ routes.post(
 // get category list
 routes.get(
     '/',
-    authJwt,
+    // authJwt,
     categoryControllers.getCategoryList
 )
 
 // get category by :id
 routes.get(
     '/:id',
-    authJwt,
     categoryControllers.getCategoryById
+)
+
+routes.get(
+    '/category/tag',
+    // authJwt,
+    categoryControllers.getCategoryByTag
 )
 
 // get category by :id and update

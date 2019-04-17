@@ -4,10 +4,8 @@ import Category from './category.model'
 
 
 export async function createCategory(req, res) {
-    console.log(req.body);
     try {
         const category = await Category.createCategory(req.body, req.user._id);
-        console.log(category);
         return res.status(HTTPStatus.CREATED).json(category);
     } catch (error) {
         return res.status(HTTPStatus.BAD_REQUEST).json(error)
@@ -17,8 +15,6 @@ export async function createCategory(req, res) {
 export async function getCategoryList(req, res) {
     try {
         const categories = await Category.find({})
-
-        console.log(res);
 
         return res.status(HTTPStatus.OK).json(categories)
     } catch (error) {
@@ -36,11 +32,22 @@ export async function getCategoryById(req, res) {
     }
 }
 
+export async function getCategoryByTag(req, res) {
+    console.log(req.query);
+    let query = req.query
+    try {
+        const categories = await Category.find(query)
+
+        return res.status(HTTPStatus.OK).json(categories)
+    } catch (error) {
+        return res.status(HTTPStatus.BAD_REQUEST).json(error)
+    }
+}
+
 export async function updateCategoryById(req, res) {
     try {
         // make this so that only the super admin will be able to update categories
         const category = await Category.findByIdAndUpdate(req.params.id, req.body)
-        console.log(category);
 
         return res.status(HTTPStatus.OK).json(category)
     } catch (error) {
